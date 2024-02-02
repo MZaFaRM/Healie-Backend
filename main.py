@@ -23,8 +23,7 @@ async def diagnose_user(chat_request: ChatRequest):
     payload = {
         "providers": "openai",
         "text": (
-            chat_request.prompt +
-            ". Provide a follow up question for diagnosis to "
+            chat_request.prompt + ". Provide a follow up question for diagnosis to "
             "gather more about the issue (lifestyle or "
             "genetics or previous treatment responses etc.)"
         ),
@@ -96,9 +95,9 @@ class ChatHistory(BaseModel):
 @app.post("/treatment/")
 async def provide_treatment(chat_history: ChatHistory):
     data = "\n".join(
-        f"{convo["role"]}: {convo["message"]}" for convo in chat_history.history
+        f"{convo['role']}: {convo['message']}" for convo in chat_history.history
     )
-    
+
     headers = {
         "Authorization": f"Bearer {config('API_TOKEN')}",
         "Content-Type": "application/json; charset=utf-8",
@@ -123,4 +122,3 @@ async def provide_treatment(chat_history: ChatHistory):
     result = data.json()
 
     return {"response": result}
-    
