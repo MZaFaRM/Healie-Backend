@@ -1,8 +1,11 @@
+import base64
+from io import BytesIO
 from typing import List
 import requests
 from fastapi import FastAPI
 from pydantic import BaseModel
 from decouple import config
+import qrcode
 
 app = FastAPI()
 
@@ -35,7 +38,7 @@ async def diagnose_user(chat_request: ChatRequest):
             "information provide a diagnosis and treatment plan else "
         ),
         "previous_history": chat_request.previous_history,
-        "temperature": 0.8,
+        "temperature": 0.0,
         "max_tokens": 150,
     }
 
@@ -78,7 +81,7 @@ async def summarize_health(user_health: ChatHistory):
             "Act as Indian medical LLM and provide a concise response."
         ),
         "previous_history": [],
-        "temperature": 0.8,
+        "temperature": 0.0,
         "max_tokens": 100,
     }
 
@@ -114,7 +117,7 @@ async def provide_treatment(chat_history: ChatHistory):
             "Act as Indian medical LLM and provide a concise response."
         ),
         "previous_history": [],
-        "temperature": 0.8,
+        "temperature": 0.0,
         "max_tokens": 180,
     }
 
@@ -122,3 +125,57 @@ async def provide_treatment(chat_history: ChatHistory):
     result = data.json()
 
     return {"response": result}
+
+
+@app.post("/doctor/")
+async def provide_treatment(chat_history: ChatHistory):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+
+    data = "\n".join(
+        f"- {convo['role'].title()}: {convo['message']}" for convo in chat_history.history
+    )
+
+    qr.add_data(f"Conversation: \n\n{data}\n\n")
+
+    headers = {
+        "Authorization": f"Bearer {config('API_TOKEN')}",
+        "Content-Type": "application/json; charset=utf-8",
+    }
+
+    url = "https://api.edenai.run/v2/text/chat"
+    payload = {
+        "providers": "openai",
+        "text": (
+            "Analyse the given data and provide your diagnosis "
+            "to the doctor about the patient one paragraph.\n\n" + data
+        ),
+        "chat_global_action": (
+            "Act as Indian medical LLM doctor's assistant and provide a concise response."
+        ),
+        "previous_history": [],
+        "temperature": 0.0,
+        "max_tokens": 180,
+    }
+
+    data = requests.post(url, json=payload, headers=headers)
+    result = data.json()
+
+    qr.add_data(f"AI Assistant's diagnosis: \n\n\t{result['openai']['generated_text']}")
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    buffer.seek(0)
+
+    encoded_string = base64.b64encode(buffer.read()).decode("utf-8")
+
+    image_data_uri = f"data:image/png;base64,{encoded_string}"
+
+    return {"response": result, "image": image_data_uri}
