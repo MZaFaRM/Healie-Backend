@@ -38,7 +38,7 @@ async def diagnose_user(chat_request: ChatRequest):
             "information provide a diagnosis and treatment plan else "
         ),
         "previous_history": chat_request.previous_history,
-        "temperature": 0.0,
+        "temperature": 0.8,
         "max_tokens": 150,
     }
 
