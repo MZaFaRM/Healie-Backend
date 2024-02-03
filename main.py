@@ -111,8 +111,8 @@ async def provide_treatment(chat_history: ChatHistory):
         "providers": "openai",
         "text": (
             f"```{data}" + "```\n\nAnalyse the given data and provide a "
-            "treatment plan for the user in one paragraph. If not possible "
-            "request the user for to visit a doctor for further diagnosis."
+            "treatment plan for me in one paragraph. If not possible "
+            "request me to visit a doctor for further diagnosis."
         ),
         "chat_global_action": "Act as Indian medical LLM and provide a concise response.",
         "previous_history": [],
@@ -136,11 +136,11 @@ async def provide_treatment(chat_history: ChatHistory):
     )
 
     data = "\n".join(
-        f"- {convo['role'].title()}: {convo['message']}"
+        f"- {convo['role'].title()}:\n\t {convo['message']}"
         for convo in chat_history.history
     )
 
-    qr.add_data(f"Conversation: \n\n{data}\n\n")
+    qr.add_data(f"# Conversation: \n\n{data}\n\n")
 
     headers = {
         "Authorization": f"Bearer {config('API_TOKEN')}",
@@ -152,7 +152,7 @@ async def provide_treatment(chat_history: ChatHistory):
         "providers": "openai",
         "text": (
             "Analyse the given data and provide your diagnosis "
-            "to the doctor about the patient one paragraph.\n\n" + data
+            "to the doctor about the patient in one paragraph.\n\n" + data
         ),
         "chat_global_action": (
             "Act as Indian medical LLM doctor's assistant and provide a concise response."
@@ -165,7 +165,7 @@ async def provide_treatment(chat_history: ChatHistory):
     data = requests.post(url, json=payload, headers=headers)
     result = data.json()
 
-    qr.add_data(f"AI Assistant's diagnosis: \n\n\t{result['openai']['generated_text']}")
+    qr.add_data(f"# AI Assistant's diagnosis: \n\n{result['openai']['generated_text'].strip('`')}")
     qr.make(fit=True)
 
     img = qr.make_image(fill_color="black", back_color="white")
