@@ -23,23 +23,21 @@ async def diagnose_user(chat_request: ChatRequest):
     }
 
     url = "https://api.edenai.run/v2/text/chat"
+
     payload = {
         "providers": "openai",
         "text": (
-            chat_request.prompt
-            + ". Ask me a if I have any issues and try to diagnose by"
-            "gathering more information (lifestyle or "
-            "genetics or previous treatment responses etc.)"
+            chat_request.prompt + ". Ask a follow up specific question to gather comprehensive"
+            "details about symptoms or medical history or lifestyle. "
         ),
         "chat_global_action": (
-            "Act as Indian medical LLM and Provide personalized health advice based on user input. "
-            "Ask follow-up questions to gather comprehensive details "
-            "about symptoms, medical history, and lifestyle. Reduce possibly bias questions. "
-            "If you have got from previous_history and user input sufficient "
-            "information provide a diagnosis and treatment plan else "
+            "Act as an Medical LLM. Provide personalized health advice based on user input. "
+            "Ask follow-up questions to gather comprehensive details about symptoms, medical history, and lifestyle. "
+            "Ensure questions are sensitive and unbiased. If sufficient information is provided from "
+            "previous_history and user input, offer a diagnosis and treatment plan; otherwise, continue gathering information."
         ),
         "previous_history": chat_request.previous_history,
-        "temperature": 0.8,
+        "temperature": 0.5,
         "max_tokens": 150,
     }
 
@@ -64,7 +62,7 @@ class ChatHistory(BaseModel):
 
 @app.post("/summarize/")
 async def summarize_health(user_health: ChatHistory):
-    report = " - ".join(item + ":" + str(value) for item, value in user_health)
+    report = " - ".join(f"{item}:{str(value)}" for item, value in user_health)
 
     headers = {
         "Authorization": f"Bearer {config('API_TOKEN')}",
