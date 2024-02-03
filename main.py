@@ -109,8 +109,8 @@ async def provide_treatment(chat_history: ChatHistory):
     payload = {
         "providers": "openai",
         "text": (
-            data,
-            "\n\n Analyse the given data and provide a "
+            data +
+            "\n\nAnalyse the given data and provide a "
             "treatment plan for the user in one paragraph.",
         ),
         "chat_global_action": (
