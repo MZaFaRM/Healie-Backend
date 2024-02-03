@@ -27,7 +27,7 @@ async def diagnose_user(chat_request: ChatRequest):
     payload = {
         "providers": "openai",
         "text": (
-            chat_request.prompt + ". Ask a follow up specific question to gather comprehensive"
+            chat_request.prompt + ". Ask a single follow up specific question to gather comprehensive"
             "details about symptoms or medical history or lifestyle. "
         ),
         "chat_global_action": (
