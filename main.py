@@ -27,7 +27,8 @@ async def diagnose_user(chat_request: ChatRequest):
     payload = {
         "providers": "openai",
         "text": (
-            chat_request.prompt + ". Ask a single follow up specific question to gather comprehensive"
+            chat_request.prompt
+            + ". Ask a single follow up specific question to gather comprehensive"
             "details about symptoms or medical history or lifestyle. "
         ),
         "chat_global_action": (
@@ -109,13 +110,11 @@ async def provide_treatment(chat_history: ChatHistory):
     payload = {
         "providers": "openai",
         "text": (
-            data +
-            "\n\nAnalyse the given data and provide a "
-            "treatment plan for the user in one paragraph.",
+            f"```{data}" + "```\n\nAnalyse the given data and provide a "
+            "treatment plan for the user in one paragraph. If not possible "
+            "request the user for to visit a doctor for further diagnosis."
         ),
-        "chat_global_action": (
-            "Act as Indian medical LLM and provide a concise response."
-        ),
+        "chat_global_action": "Act as Indian medical LLM and provide a concise response.",
         "previous_history": [],
         "temperature": 0.8,
         "max_tokens": 180,
