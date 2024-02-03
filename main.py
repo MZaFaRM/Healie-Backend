@@ -110,14 +110,15 @@ async def provide_treatment(chat_history: ChatHistory):
     payload = {
         "providers": "openai",
         "text": (
-            "Analyse the given data and provide a "
-            "treatment plan for the user in one paragraph.\n\n" + data
+            data,
+            "\n\n Analyse the given data and provide a "
+            "treatment plan for the user in one paragraph.",
         ),
         "chat_global_action": (
             "Act as Indian medical LLM and provide a concise response."
         ),
         "previous_history": [],
-        "temperature": 0.0,
+        "temperature": 0.8,
         "max_tokens": 180,
     }
 
@@ -137,7 +138,8 @@ async def provide_treatment(chat_history: ChatHistory):
     )
 
     data = "\n".join(
-        f"- {convo['role'].title()}: {convo['message']}" for convo in chat_history.history
+        f"- {convo['role'].title()}: {convo['message']}"
+        for convo in chat_history.history
     )
 
     qr.add_data(f"Conversation: \n\n{data}\n\n")
