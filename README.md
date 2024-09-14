@@ -1,4 +1,4 @@
-# Healie Backend
+# Healie
 
 ### **Backend (FastAPI):**
 
