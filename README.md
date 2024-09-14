@@ -49,11 +49,6 @@ More info at my [LinkedIn Page](https://www.linkedin.com/posts/muhammed-zafar-mm
 5. Run the application:
    bash
    uvicorn main:app --reload
-   
-
-### API Endpoints
-- /predict: AI/ML model predictions for healthcare data.
-- /users: Manage user accounts and authentication.
 
 ### Contributors
 - *MOOSA FAYAZ* - UI Design
