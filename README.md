@@ -1,8 +1,6 @@
-# Healie
+# Healie Backend
 
-### **Backend (FastAPI) README:**
-
-# Healthcare AI/ML Backend - FastAPI
+### **Backend (FastAPI):**
 
 This repository contains the FastAPI backend for our healthcare project, developed for ScaleHack'24 - Med Hack, where we won the 'Best Use of AI/ML' award. The backend powers the AI/ML functionalities and interacts with the Flutter-based frontend.
 
