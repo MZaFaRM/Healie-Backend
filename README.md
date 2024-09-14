@@ -6,6 +6,8 @@
 
 This repository contains the FastAPI backend for our healthcare project, developed for ScaleHack'24 - Med Hack, where we won the 'Best Use of AI/ML' award. The backend powers the AI/ML functionalities and interacts with the Flutter-based frontend.
 
+More info at my [LinkedIn Page](https://www.linkedin.com/posts/muhammed-zafar-mm_fastapi-django-scalehack24-activity-7189685764220149760-hd5w)
+
 ## Features
 - FastAPI for high-performance backend development.
 - AI/ML models for healthcare data processing.
